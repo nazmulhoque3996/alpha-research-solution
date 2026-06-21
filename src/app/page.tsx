@@ -29,12 +29,15 @@ export default function Home() {
   const [chooseUsVisible, setChooseUsVisible] = useState(false);
   const [faqVisible, setFaqVisible] = useState(false);
   
+  const [testimonialsVisible, setTestimonialsVisible] = useState(false);
+  
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   const workflowRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const chooseUsRef = useRef<HTMLDivElement>(null);
   const faqRef = useRef<HTMLDivElement>(null);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const createObserver = (ref: React.RefObject<HTMLDivElement | null>, setVisible: (val: boolean) => void) => {
@@ -59,13 +62,48 @@ export default function Home() {
     const o2 = createObserver(servicesRef, setServicesVisible);
     const o3 = createObserver(chooseUsRef, setChooseUsVisible);
     const o4 = createObserver(faqRef, setFaqVisible);
+    const o5 = createObserver(testimonialsRef, setTestimonialsVisible);
 
     return () => {
       o1.disconnect();
       o2.disconnect();
       o3.disconnect();
       o4.disconnect();
+      o5.disconnect();
     };
+  }, []);
+
+  const testimonialSliderRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (testimonialSliderRef.current) {
+      testimonialSliderRef.current.scrollBy({ left: -350, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (testimonialSliderRef.current) {
+      const { scrollLeft: currentLeft, scrollWidth, clientWidth } = testimonialSliderRef.current;
+      if (currentLeft + clientWidth >= scrollWidth - 15) {
+        testimonialSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        testimonialSliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
+      }
+    }
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (testimonialSliderRef.current) {
+        const { scrollLeft: currentLeft, scrollWidth, clientWidth } = testimonialSliderRef.current;
+        if (currentLeft + clientWidth >= scrollWidth - 15) {
+          testimonialSliderRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          testimonialSliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
+        }
+      }
+    }, 4000);
+    return () => clearInterval(timer);
   }, []);
 
   // Strict font implementation classes
@@ -318,6 +356,57 @@ export default function Home() {
     }
   ];
 
+  const testimonials = [
+    {
+      id: 1,
+      quote: lang === "en"
+        ? "The amount of stress I had regarding the defense was overwhelming, but the way your team handled the entire project was simply amazing. Thank you so much!"
+        : "ডিফেন্স নিয়ে যে পরিমাণ মানসিক চাপে ছিলাম, আপনারা পুরো প্রজেক্টটি যেভাবে সুন্দর করে হ্যান্ডেল করেছেন তার জন্য অসংখ্য ধন্যবাদ।",
+      author: lang === "en" ? "MD. Rakib & Fahim" : "এমডি. রাকিব ও ফাহিম",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    },
+    {
+      id: 2,
+      quote: lang === "en"
+        ? "The presentation went flawlessly! I explained everything so clearly that the external examiners didn't even ask a single question. Approved instantly!"
+        : "প্রেজেন্টেশন দুর্দান্ত হয়েছে! সব কিছু এতো গুছিয়ে বুঝিয়ে দিয়েছিলাম যে এক্সটার্নাল স্যাররা কোনো প্রশ্নই করেননি। একবারে অ্যাপ্রুভড!",
+      author: lang === "en" ? "Sanjida Rahman" : "সানজিদা রহমান",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    },
+    {
+      id: 3,
+      quote: lang === "en"
+        ? "Alhamdulillah, our defense was yesterday. Everything went perfectly, and the panel highly praised our core AI research approach."
+        : "আলহামদুলিল্লাহ, গতকাল আমাদের ডিফেন্স ছিল। সবকিছু খুব ভালোভাবে সম্পন্ন হয়েছে এবং প্যানেলের সবাই আমাদের রিসার্চ অ্যাপ্রোচের অনেক প্রশংসা করেছেন।",
+      author: lang === "en" ? "Imran & Sabbir" : "ইমরান ও সাব্বির",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    },
+    {
+      id: 4,
+      quote: lang === "en"
+        ? "Thank you so much for guiding us like an elder brother throughout this entire thesis journey. Your proper help made this possible."
+        : "বড় ভাইয়ের মতো পুরো থিসিস জার্নিতে আমাদের প্রপার গাইডলাইন দেওয়ার জন্য অসংখ্য ধন্যবাদ।",
+      author: lang === "en" ? "S. Hasan" : "এস. হাসান",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    },
+    {
+      id: 5,
+      quote: lang === "en"
+        ? "The defense was excellent! The panel asked the exact questions you prepared us for during our live mock defense sessions."
+        : "ডিফেন্স অনেক ভালো হয়েছে ভাইয়া! আপনারা মক-ডিফেন্সে যেভাবে বলেছিলেন, ঠিক সেভাবেই প্রশ্ন করেছে।",
+      author: lang === "en" ? "Farhana & Tisha" : "ফারহানা ও তিশা",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    },
+    {
+      id: 6,
+      quote: lang === "en"
+        ? "Finally got the approval! I was able to face the defense panel with complete confidence, all thanks to your live guidelines and help."
+        : "ফাইনালি অ্যাপ্রুভাল পেয়েছি ভাইয়া! আপনাদের হেল্প আর লাইভ গাইডলাইনের কারণে খুব কনফিডেন্টলি ডিফেন্স দিতে পেরেছিলাম।",
+      author: lang === "en" ? "Nafis M." : "নাফিস এম.",
+      details: lang === "en" ? "FYDP Student" : "FYDP স্টুডেন্ট"
+    }
+  ];
+
   return (
     <div className={`min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-red-500 selection:text-white ${lang === "en" ? inter.className : hindSiliguri.className}`}>
       {/* 1. Header (Navbar) */}
@@ -353,6 +442,10 @@ export default function Home() {
             </a>
             <a href="#choose-us" className="text-sm font-semibold text-slate-600 hover:text-red-600 transition-colors duration-200 relative group py-2">
               {lang === "en" ? "Why Choose Us" : "কেন আমরা"}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-red-600 transition-colors duration-200 relative group py-2">
+              {lang === "en" ? "Testimonials" : "রিভিউ"}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
             </a>
             <a href="#faq" className="text-sm font-semibold text-slate-600 hover:text-red-600 transition-colors duration-200 relative group py-2">
@@ -443,6 +536,13 @@ export default function Home() {
               className="block px-3 py-2.5 rounded-md text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-red-600 transition-colors"
             >
               {lang === "en" ? "Why Choose Us" : "কেন আমরা"}
+            </a>
+            <a
+              href="#testimonials"
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-3 py-2.5 rounded-md text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-red-600 transition-colors"
+            >
+              {lang === "en" ? "Testimonials" : "রিভিউ"}
             </a>
             <a
               href="#faq"
@@ -963,7 +1063,109 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. FAQ Section */}
+      {/* 6. Testimonials Section */}
+      <section id="testimonials" ref={testimonialsRef} className="py-20 sm:py-28 bg-slate-50 relative overflow-hidden border-b border-slate-100">
+        {/* Soft background grid highlights */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-red-50/30 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-slate-100 rounded-full blur-3xl -z-10"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+            <span className={`text-xs font-bold tracking-widest text-red-600 uppercase bg-red-50 px-3.5 py-1.5 rounded-full border border-red-100/60 ${textFont}`}>
+              {lang === "en" ? "Testimonials" : "টেস্টিমোনিয়াল"}
+            </span>
+            <h2 className={`${headingFont} text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mt-4 tracking-tight leading-snug`}>
+              {lang === "en" ? "What Our Students Say" : "শিক্ষার্থীদের রিভিউ ও সাফল্য"}
+            </h2>
+            <p className={`text-base sm:text-lg text-slate-600 mt-4 leading-relaxed ${textFont}`}>
+              {lang === "en"
+                ? "Hear from students who achieved top grades and cleared their defenses with confidence under our expert mentorship."
+                : "আমাদের গাইডলাইন ও ওয়ান-টু-ওয়ান সাপোর্টে এ-প্লাস গ্রেড পেয়ে থিসিস সম্পন্ন করা শিক্ষার্থীদের বাস্তব অভিজ্ঞতা।"}
+            </p>
+          </div>
+
+          {/* Testimonial Cards Slider */}
+          <div className={`relative w-full transition-all duration-1000 transform ${
+            testimonialsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}>
+            {/* Left and Right Gradient Fades */}
+            <div className="absolute inset-y-0 left-0 w-12 sm:w-24 bg-gradient-to-r from-slate-50 to-transparent z-25 pointer-events-none"></div>
+            <div className="absolute inset-y-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-slate-50 to-transparent z-25 pointer-events-none"></div>
+
+            {/* Left Arrow Button */}
+            <button
+              onClick={scrollLeft}
+              type="button"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-red-600 shadow-md hover:shadow-lg border border-slate-100 hover:border-red-200 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none cursor-pointer"
+              aria-label="Scroll left"
+            >
+              <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Right Arrow Button */}
+            <button
+              onClick={scrollRight}
+              type="button"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-red-600 shadow-md hover:shadow-lg border border-slate-100 hover:border-red-200 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none cursor-pointer"
+              aria-label="Scroll right"
+            >
+              <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Scrolling container */}
+            <div
+              ref={testimonialSliderRef}
+              className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar gap-6 px-12 md:px-16 pb-6 pt-4"
+            >
+              {testimonials.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-[300px] sm:w-[350px] min-w-[300px] md:min-w-[350px] snap-center flex-shrink-0"
+                >
+                  <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-red-200 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden h-full flex flex-col justify-between">
+                    <div>
+                      {/* Faint Quote Background Mark */}
+                      <span className="absolute top-2 left-4 text-slate-100 text-8xl font-serif select-none pointer-events-none leading-none">
+                        &ldquo;
+                      </span>
+
+                      {/* Verified Badge */}
+                      <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-bold mb-4 relative z-10">
+                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{lang === "en" ? "Verified Student" : "ভেরিফাইড স্টুডেন্ট"}</span>
+                      </div>
+
+                      {/* Quote Text */}
+                      <p className={`text-slate-700 text-sm sm:text-base leading-relaxed relative z-10 ${textFont}`}>
+                        &ldquo;{item.quote}&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Author Info */}
+                    <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col relative z-10">
+                      <span className={`${headingFont} text-sm font-bold text-slate-900`}>
+                        {item.author}
+                      </span>
+                      <span className={`text-xs text-slate-500 font-semibold mt-0.5 ${textFont}`}>
+                        {item.details}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FAQ Section */}
       <section id="faq" ref={faqRef} className="py-20 sm:py-28 bg-white border-b border-slate-100 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
